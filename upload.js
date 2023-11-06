@@ -18,10 +18,10 @@ form.addEventListener("click", () => {
     fileInput.click();
 });
 
-form.addEventListener("change", ({ target }) => {
+form.addEventListener("change", ({target }) => {
     let file = target.files[0];
     preUploadFile(file);
-})
+});
 
 function preUploadFile(file) {
     if (file) {
@@ -37,7 +37,7 @@ function preUploadFile(file) {
 function uploadFile(name) {
     let xhr = new XMLHttpRequest();
     xhr.open("POST", "php/upload.php");
-    xhr.upload.addEventListener("progess", ({ loaded, total }) => {
+    xhr.upload.addEventListener("progess", ({loaded, total }) => {
         let fileLoaded = Math.floor((loaded / total) * 100);
         let fileTotal = Math.floor(total / 1000);
         let fileSize;
@@ -52,7 +52,8 @@ function uploadFile(name) {
                                 <div class="progreso-bar">
                                     <div class="progeso" style="width: ${fileLoaded}%"></div>
                                 </div>
-                            </div>`;
+                            </div>
+                        </li>`;
         //subidoArea.innerHTML = "";
         subidoArea.classList.add("onprogress");
         progresoArea.innerHTML = progessHTML;
@@ -61,7 +62,7 @@ function uploadFile(name) {
 
             let uploadedHTML = `<li class="row">
                                 <div class="contenido">
-                                    <i class=fas fa-file-alt"></i>
+                                    <i class="fas fa-file-alt"></i>
                                     <div class="detalles">
                                         <span class="nombre">${name} &bullet; Subido</span>
                                         <span class="size">${fileSize}</span>
