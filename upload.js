@@ -37,26 +37,26 @@ function preUploadFile(file) {
 function uploadFile(name) {
     let xhr = new XMLHttpRequest();
     xhr.open("POST", "php/upload.php");
-    xhr.upload.addEventListener("progess", ({loaded, total }) => {
+    xhr.upload.addEventListener("progress", ({loaded, total }) => {
         let fileLoaded = Math.floor((loaded / total) * 100);
         let fileTotal = Math.floor(total / 1000);
         let fileSize;
         (fileTotal < 1024) ? fileSize = fileTotal + " KB" : fileSize = (loaded / (1024 * 1024)).toFixed(2) + " MB";
-        let progessHTML = `<li class="row>
-                            <i class = "fas fa-file-alt"></i>
-                            <div class="contenido">
-                                <div class="detalles">
-                                    <span class="nombre">${name} &bullet; Subiendo</span>
-                                    <span class="porcentaje">${fileLoaded}%</span>
-                                </div>
-                                <div class="progreso-bar">
-                                    <div class="progeso" style="width: ${fileLoaded}%"></div>
-                                </div>
-                            </div>
-                        </li>`;
+        let progressHTML = `<li class="row">
+                            <i class="fas fa-file-alt"></i>
+                                <div class="contenido">
+                                    <div class="detalles">
+                                        <span class="nombre">${name} &bullet; Subiendo</span>
+                                        <span class="porcentaje">${fileLoaded}%</span>
+                                    </div>
+                                    <div class="progreso-bar">
+                                        <div class="progreso" style="width: ${fileLoaded}%"></div>
+                                    </div>
+                                </div>    
+                            </li>`; 
         //subidoArea.innerHTML = "";
         subidoArea.classList.add("onprogress");
-        progresoArea.innerHTML = progessHTML;
+        progresoArea.innerHTML = progressHTML;
         if (loaded == total) {
             progresoArea.innerHTML = "";
 
@@ -67,20 +67,16 @@ function uploadFile(name) {
                                         <span class="nombre">${name} &bullet; Subido</span>
                                         <span class="size">${fileSize}</span>
                                     </div>
+                                </div>
                                     <i class="fas fa-check"></i>
                                 </li>`;
-            subidoArea.classist.remove("onprogress");
-
-            // Descomenta esto si quieres omitir es historial de subidas
-
-            //subidoArea. InnerHTML uploadedHTML
-
-            //Comenta esto quieres omitir es historial de subidas 
-            subidoArea.insectAdjacentHTML("afterbegin", uploadedHTML);
+            subidoArea.classList.remove("onprogress");
+            subidoArea.insertAdjacentHTML("afterbegin", uploadedHTML);
         }
     });
+    let formData = new FormData(form);
+    xhr.send(formData);
 }
 
-let formData = new FormData(form);
-xhr.send(formData);
+
 

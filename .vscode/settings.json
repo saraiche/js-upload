@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/8375ef0e-89fe-4672-94ad-0b5b6024ef4a/resourceGroups/myResourcesGroup/providers/Microsoft.Web/sites/js-upload",
+    "appService.deploySubpath": "."
+}
