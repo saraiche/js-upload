@@ -1,0 +1,85 @@
+const form = document.querySelector("form");
+const fileInput = form.querySelector(".file-input");
+const progresoArea = document.querySelector(".progreso-area");
+const subidoArea = document.querySelector(".subido-area");
+
+form.addEventListener("dragover", e => {
+    e.preventDefault();
+});
+
+form.addEventListener("drop", e => {
+    e.preventDefault();
+    fileInput.files = e.dataTransfer.files;
+    let file = fileInput.files[0];
+    preUploadFile(file);
+});
+
+form.addEventListener("click", () => {
+    fileInput.click();
+});
+
+form.addEventListener("change", ({ target }) => {
+    let file = target.files[0];
+    preUploadFile(file);
+})
+
+function preUploadFile(file) {
+    if (file) {
+        let filename = file.name;
+        if (filename.length >= 12) {
+            let splitName = filename.split('.');
+            filename = splitName[0].substring(0, 12) + "... ." + splitName[1];
+        }
+        uploadFile(filename);
+    }
+}
+
+function uploadFile(name) {
+    let xhr = new XMLHttpRequest();
+    xhr.open("POST", "php/upload.php");
+    xhr.upload.addEventListener("progess", ({ loaded, total }) => {
+        let fileLoaded = Math.floor((loaded / total) * 100);
+        let fileTotal = Math.floor(total / 1000);
+        let fileSize;
+        (fileTotal < 1024) ? fileSize = fileTotal + " KB" : fileSize = (loaded / (1024 * 1024)).toFixed(2) + " MB";
+        let progessHTML = `<li class="row>
+                            <i class = "fas fa-file-alt"></i>
+                            <div class="contenido">
+                                <div class="detalles">
+                                    <span class="nombre">${name} &bullet; Subiendo</span>
+                                    <span class="porcentaje">${fileLoaded}%</span>
+                                </div>
+                                <div class="progreso-bar">
+                                    <div class="progeso" style="width: ${fileLoaded}%"></div>
+                                </div>
+                            </div>`;
+        //subidoArea.innerHTML = "";
+        subidoArea.classList.add("onprogress");
+        progresoArea.innerHTML = progessHTML;
+        if (loaded == total) {
+            progresoArea.innerHTML = "";
+
+            let uploadedHTML = `<li class="row">
+                                <div class="contenido">
+                                    <i class=fas fa-file-alt"></i>
+                                    <div class="detalles">
+                                        <span class="nombre">${name} &bullet; Subido</span>
+                                        <span class="size">${fileSize}</span>
+                                    </div>
+                                    <i class="fas fa-check"></i>
+                                </li>`;
+            subidoArea.classist.remove("onprogress");
+
+            // Descomenta esto si quieres omitir es historial de subidas
+
+            //subidoArea. InnerHTML uploadedHTML
+
+            //Comenta esto quieres omitir es historial de subidas 
+            subidoArea.insectAdjacentHTML("afterbegin", uploadedHTML);
+        }
+    });
+}
+
+let formData = new FormData(form);
+xhr.send(formData);
+
